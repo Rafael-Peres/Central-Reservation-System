@@ -2,9 +2,12 @@ import { Module } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
-
+import { ReservationsModule } from './reservations/reservations.module';
 @Module({
-  imports: [],
+  imports: [
+    MongooseModule.forRoot('mongodb://localhost:27017/Housi'),
+    ReservationsModule,
+  ],
   controllers: [AppController],
   providers: [AppService],
 })
