@@ -5,7 +5,9 @@ import { AppService } from './app.service';
 import { ReservationsModule } from './reservations/reservations.module';
 @Module({
   imports: [
-    MongooseModule.forRoot('mongodb://localhost:27017/Housi'),
+    MongooseModule.forRoot(
+      'mongodb+srv://admin:admin@crs.kgew5.mongodb.net/CRS?retryWrites=true&w=majority',
+    ),
     ReservationsModule,
   ],
   controllers: [AppController],
