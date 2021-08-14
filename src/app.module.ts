@@ -1,7 +1,5 @@
 import { Module } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
-import { AppController } from './app.controller';
-import { AppService } from './app.service';
 import { ReservationsModule } from './reservations/reservations.module';
 @Module({
   imports: [
@@ -10,7 +8,7 @@ import { ReservationsModule } from './reservations/reservations.module';
     ),
     ReservationsModule,
   ],
-  controllers: [AppController],
-  providers: [AppService],
+  controllers: [],
+  providers: [],
 })
 export class AppModule {}
