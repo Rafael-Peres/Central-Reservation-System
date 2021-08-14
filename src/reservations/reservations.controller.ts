@@ -7,27 +7,27 @@ import {
   Param,
   Delete,
 } from '@nestjs/common';
-import { ReservationsService } from './reservations.service';
+import { ReservationService } from './reservations.service';
 import { CreateReservationDto } from './dto/create-reservation.dto';
 import { UpdateReservationDto } from './dto/update-reservation.dto';
 
 @Controller('reservations')
-export class ReservationsController {
-  constructor(private readonly reservationsService: ReservationsService) {}
+export class ReservationController {
+  constructor(private readonly reservationService: ReservationService) {}
 
   @Post()
   create(@Body() createReservationDto: CreateReservationDto) {
-    return this.reservationsService.create(createReservationDto);
+    return this.reservationService.create(createReservationDto);
   }
 
   @Get()
   findAll() {
-    return this.reservationsService.findAll();
+    return this.reservationService.findAll();
   }
 
   @Get(':id')
   findOne(@Param('id') id: string) {
-    return this.reservationsService.findOne(id);
+    return this.reservationService.findOne(id);
   }
 
   @Patch(':id')
@@ -35,11 +35,11 @@ export class ReservationsController {
     @Param('id') id: string,
     @Body() updateReservationDto: UpdateReservationDto,
   ) {
-    return this.reservationsService.update(id, updateReservationDto);
+    return this.reservationService.update(id, updateReservationDto);
   }
 
   @Delete(':id')
   remove(@Param('id') id: string) {
-    return this.reservationsService.remove(id);
+    return this.reservationService.remove(id);
   }
 }

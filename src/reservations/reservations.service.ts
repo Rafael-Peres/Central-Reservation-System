@@ -6,7 +6,7 @@ import { UpdateReservationDto } from './dto/update-reservation.dto';
 import { Reservation, ReservationDocument } from './schemas/reservation.schema';
 
 @Injectable()
-export class ReservationsService {
+export class ReservationService {
   constructor(
     @InjectModel(Reservation.name)
     private reservationModel: Model<ReservationDocument>,

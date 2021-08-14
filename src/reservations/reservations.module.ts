@@ -1,7 +1,7 @@
 import { Module } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
-import { ReservationsService } from './reservations.service';
-import { ReservationsController } from './reservations.controller';
+import { ReservationService } from './reservations.service';
+import { ReservationController } from './reservations.controller';
 import { Reservation, ReservationSchema } from './schemas/reservation.schema';
 
 @Module({
@@ -10,7 +10,7 @@ import { Reservation, ReservationSchema } from './schemas/reservation.schema';
       { name: Reservation.name, schema: ReservationSchema },
     ]),
   ],
-  controllers: [ReservationsController],
-  providers: [ReservationsService],
+  controllers: [ReservationController],
+  providers: [ReservationService],
 })
-export class ReservationsModule {}
+export class ReservationModule {}
