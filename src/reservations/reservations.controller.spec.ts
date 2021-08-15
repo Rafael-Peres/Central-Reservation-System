@@ -26,7 +26,7 @@ describe('ReservationController', () => {
     guestEmail: 'rafael@email.com',
   };
 
-  const ReservationSchemaList = [
+  const reservationSchemaList = [
     {
       apartmentName: 'string',
       dateCheckin: new Date(),
@@ -53,7 +53,7 @@ describe('ReservationController', () => {
           provide: ReservationService,
           useValue: {
             create: jest.fn().mockResolvedValue(newReservationSchema),
-            findAll: jest.fn().mockResolvedValue(ReservationSchemaList),
+            findAll: jest.fn().mockResolvedValue(reservationSchemaList),
             findOne: jest.fn(),
             update: jest.fn().mockResolvedValue(updateReservationSchema),
             remove: jest.fn().mockResolvedValue(undefined),
@@ -74,8 +74,8 @@ describe('ReservationController', () => {
   });
 
   describe('create', () => {
-    it('should return reservation object created', async () => {
-      const body: CreateReservationDto = {
+    it('should create a new reservation successfully', async () => {
+      const data: CreateReservationDto = {
         apartmentName: 'string',
         dateCheckin: new Date(),
         dateCheckout: new Date(),
@@ -84,7 +84,7 @@ describe('ReservationController', () => {
         guestEmail: 'string',
       };
 
-      const result = await reservationController.create(body);
+      const result = await reservationController.create(data);
 
       expect(result).toEqual(newReservationSchema);
     });
@@ -94,7 +94,7 @@ describe('ReservationController', () => {
     it('should return a reservation list successfuly', async () => {
       const result = await reservationController.findAll();
 
-      expect(result).toEqual(ReservationSchemaList);
+      expect(result).toEqual(reservationSchemaList);
       expect(typeof result).toEqual('object');
       expect(reservationService.findAll).toHaveBeenCalledTimes(1);
     });
@@ -109,7 +109,7 @@ describe('ReservationController', () => {
   });
 
   describe('update', () => {
-    const body: UpdateReservationDto = {
+    const data: UpdateReservationDto = {
       apartmentName: 'string',
       dateCheckin: new Date(),
       dateCheckout: new Date(),
@@ -119,11 +119,11 @@ describe('ReservationController', () => {
     };
 
     it('should update a reservation successfully', async () => {
-      const result = await reservationController.update('1', body);
+      const result = await reservationController.update('1', data);
 
       expect(result).toEqual(updateReservationSchema);
       expect(reservationService.update).toHaveBeenCalledTimes(1);
-      expect(reservationService.update).toHaveBeenCalledWith('1', body);
+      expect(reservationService.update).toHaveBeenCalledWith('1', data);
     });
 
     it('should throw an exception', () => {
@@ -131,11 +131,11 @@ describe('ReservationController', () => {
         .spyOn(reservationService, 'update')
         .mockRejectedValueOnce(new Error());
 
-      expect(reservationController.update('1', body)).rejects.toThrowError();
+      expect(reservationController.update('1', data)).rejects.toThrowError();
     });
   });
 
-  describe('delete', () => {
+  describe('remove', () => {
     it('should remove a reservation', async () => {
       const result = await reservationController.remove('1');
 
