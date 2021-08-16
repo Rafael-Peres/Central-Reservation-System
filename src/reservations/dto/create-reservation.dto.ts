@@ -5,10 +5,10 @@ export class CreateReservationDto {
   apartmentName: string;
 
   @ApiProperty()
-  dateCheckin: Date;
+  checkin: Date;
 
   @ApiProperty()
-  dateCheckout: Date;
+  checkout: Date;
 
   @ApiProperty()
   numberGuests: number;

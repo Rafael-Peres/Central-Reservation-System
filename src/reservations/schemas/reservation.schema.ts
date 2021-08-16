@@ -9,10 +9,10 @@ export class Reservation {
   apartmentName: string;
 
   @Prop()
-  dateCheckin: Date;
+  checkin: Date;
 
   @Prop()
-  dateCheckout: Date;
+  checkout: Date;
 
   @Prop()
   numberGuests: number;
@@ -25,8 +25,8 @@ export class Reservation {
 
   constructor(reservation?: Partial<Reservation>) {
     this.apartmentName = reservation?.apartmentName;
-    this.dateCheckin = reservation?.dateCheckin;
-    this.dateCheckout = reservation?.dateCheckout;
+    this.checkin = reservation?.checkin;
+    this.checkout = reservation?.checkout;
     this.numberGuests = reservation?.numberGuests;
     this.nameGuests = reservation?.nameGuests;
     this.guestEmail = reservation?.guestEmail;

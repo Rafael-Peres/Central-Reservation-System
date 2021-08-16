@@ -1,5 +1,6 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { CreateReservationDto } from './dto/create-reservation.dto';
+import { QueryReservationDto } from './dto/query-reservation.dto';
 import { UpdateReservationDto } from './dto/update-reservation.dto';
 import { ReservationController } from './reservations.controller';
 import { ReservationService } from './reservations.service';
@@ -10,8 +11,8 @@ describe('ReservationController', () => {
 
   const newReservationSchema = {
     apartmentName: 'string',
-    dateCheckin: new Date(),
-    dateCheckout: new Date(),
+    checkin: new Date(),
+    checkout: new Date(),
     numberGuests: 0,
     nameGuests: ['string'],
     guestEmail: 'string',
@@ -19,8 +20,8 @@ describe('ReservationController', () => {
 
   const updateReservationSchema = {
     apartmentName: 'Housi',
-    dateCheckin: new Date(),
-    dateCheckout: new Date(),
+    checkin: new Date(),
+    checkout: new Date(),
     numberGuests: 3,
     nameGuests: ['rafael', 'peres'],
     guestEmail: 'rafael@email.com',
@@ -29,16 +30,16 @@ describe('ReservationController', () => {
   const reservationSchemaList = [
     {
       apartmentName: 'string',
-      dateCheckin: new Date(),
-      dateCheckout: new Date(),
+      checkin: new Date(),
+      checkout: new Date(),
       numberGuests: 1,
       nameGuests: ['string'],
       guestEmail: 'string',
     },
     {
       apartmentName: 'string',
-      dateCheckin: new Date(),
-      dateCheckout: new Date(),
+      checkin: new Date(),
+      checkout: new Date(),
       numberGuests: 2,
       nameGuests: ['string'],
       guestEmail: 'string',
@@ -54,7 +55,7 @@ describe('ReservationController', () => {
           useValue: {
             create: jest.fn().mockResolvedValue(newReservationSchema),
             findAll: jest.fn().mockResolvedValue(reservationSchemaList),
-            findOne: jest.fn(),
+            findByCheck: jest.fn().mockResolvedValue(reservationSchemaList[0]),
             update: jest.fn().mockResolvedValue(updateReservationSchema),
             remove: jest.fn().mockResolvedValue(undefined),
           },
@@ -77,8 +78,8 @@ describe('ReservationController', () => {
     it('should create a new reservation successfully', async () => {
       const data: CreateReservationDto = {
         apartmentName: 'string',
-        dateCheckin: new Date(),
-        dateCheckout: new Date(),
+        checkin: new Date(),
+        checkout: new Date(),
         numberGuests: 0,
         nameGuests: ['string'],
         guestEmail: 'string',
@@ -108,11 +109,33 @@ describe('ReservationController', () => {
     });
   });
 
+  describe('findByCheck', () => {
+    const query: QueryReservationDto = {
+      checkin: new Date(),
+      checkout: new Date(),
+    };
+    it('should return a reservation list by checkin and checkout successfuly', async () => {
+      const result = await reservationController.findByCheck(query);
+
+      expect(result).toEqual(reservationSchemaList[0]);
+      expect(typeof result).toEqual('object');
+      expect(reservationService.findByCheck).toHaveBeenCalledTimes(1);
+    });
+
+    it('should throw an exception', () => {
+      jest
+        .spyOn(reservationService, 'findByCheck')
+        .mockRejectedValueOnce(new Error());
+
+      expect(reservationController.findByCheck(query)).rejects.toThrowError();
+    });
+  });
+
   describe('update', () => {
     const data: UpdateReservationDto = {
       apartmentName: 'string',
-      dateCheckin: new Date(),
-      dateCheckout: new Date(),
+      checkin: new Date(),
+      checkout: new Date(),
       numberGuests: 0,
       nameGuests: ['string'],
       guestEmail: 'string',

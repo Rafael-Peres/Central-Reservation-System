@@ -6,10 +6,13 @@ import {
   Patch,
   Param,
   Delete,
+  Query,
+  ValidationPipe,
 } from '@nestjs/common';
 import { ReservationService } from './reservations.service';
 import { CreateReservationDto } from './dto/create-reservation.dto';
 import { UpdateReservationDto } from './dto/update-reservation.dto';
+import { QueryReservationDto } from './dto/query-reservation.dto';
 
 @Controller('reservations')
 export class ReservationController {
@@ -23,6 +26,13 @@ export class ReservationController {
   @Get()
   findAll() {
     return this.reservationService.findAll();
+  }
+
+  @Get('/check')
+  findByCheck(
+    @Query(new ValidationPipe({ transform: true })) query: QueryReservationDto,
+  ) {
+    return this.reservationService.findByCheck(query);
   }
 
   @Patch(':id')
