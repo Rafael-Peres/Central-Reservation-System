@@ -1,32 +1,53 @@
+# Central Reservation System
+
+This API uses NodeJS, NestJS, MongoDB and Docker to manage reservations.
+
+## Requirements
+
+To run this project you must have:
+
+- Nodejs
+- Docker
+- Docker Compose
+- Yarn
 ## Installation
 
+- Clone this repository
 ```bash
-$ npm install
+$ yarn
 ```
+## Docker
 
+```bash
+$ docker-compose up -d
+```
 ## Running the app
 
 ```bash
 # development
-$ npm run start
+$ yarn start
 
 # watch mode
-$ npm run start:dev
+$ yarn start:dev
 
 # production mode
-$ npm run start:prod
+$ yarn start:prod
+```
+
+## Documentation
+
+```bash
+$ http://localhost:3000/api/
 ```
 
 ## Test
 
 ```bash
 # unit tests
-$ npm run test
-
-# e2e tests
-$ npm run test:e2e
+$ yarn test
 
 # test coverage
-$ npm run test:cov
+$ yarn test:cov
 ```
+
 
