@@ -13,16 +13,11 @@ export class ReservationService {
   ) {}
 
   create(createReservationDto: CreateReservationDto) {
-    const reservation = new this.reservationModel(createReservationDto);
-    return reservation.save();
+    return this.reservationModel.create(createReservationDto);
   }
 
   findAll() {
     return this.reservationModel.find();
-  }
-
-  findOne(id: string) {
-    return this.reservationModel.findById(id);
   }
 
   update(id: string, updateReservationDto: UpdateReservationDto) {
@@ -40,10 +35,8 @@ export class ReservationService {
   }
 
   remove(id: string) {
-    return this.reservationModel
-      .deleteOne({
-        _id: id,
-      })
-      .exec();
+    return this.reservationModel.deleteOne({
+      _id: id,
+    });
   }
 }

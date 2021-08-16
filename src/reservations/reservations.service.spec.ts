@@ -1,7 +1,10 @@
+import { getModelToken } from '@nestjs/mongoose';
 import { Test, TestingModule } from '@nestjs/testing';
+import { Model } from 'mongoose';
 import { CreateReservationDto } from './dto/create-reservation.dto';
 import { UpdateReservationDto } from './dto/update-reservation.dto';
 import { ReservationService } from './reservations.service';
+import { Reservation, ReservationDocument } from './schemas/reservation.schema';
 
 const reservationSchemaList = [
   {
@@ -22,6 +25,15 @@ const reservationSchemaList = [
   },
 ];
 
+const newReservationSchema = new Reservation({
+  apartmentName: 'string',
+  dateCheckin: new Date(),
+  dateCheckout: new Date(),
+  numberGuests: 0,
+  nameGuests: ['string'],
+  guestEmail: 'string',
+});
+
 const updateReservationSchema = {
   apartmentName: 'Housi',
   dateCheckin: new Date(),
@@ -33,18 +45,24 @@ const updateReservationSchema = {
 
 describe('ReservationService', () => {
   let reservationService: ReservationService;
+  let reservationModel: Model<ReservationDocument>;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       providers: [
         ReservationService,
         {
-          provide: ReservationService,
+          provide: getModelToken('Reservation'),
           useValue: {
-            create: jest.fn().mockResolvedValue(reservationSchemaList[0]),
+            create: jest.fn().mockReturnValue(newReservationSchema),
             findAll: jest.fn().mockResolvedValue(reservationSchemaList),
+            find: jest.fn().mockResolvedValue(reservationSchemaList),
             findOne: jest.fn(),
             update: jest.fn().mockResolvedValue(updateReservationSchema),
+            findByIdAndUpdate: jest
+              .fn()
+              .mockResolvedValue(updateReservationSchema),
+            deleteOne: jest.fn().mockResolvedValue(undefined),
             remove: jest.fn(),
           },
         },
@@ -52,10 +70,14 @@ describe('ReservationService', () => {
     }).compile();
 
     reservationService = module.get<ReservationService>(ReservationService);
+    reservationModel = module.get<Model<ReservationDocument>>(
+      getModelToken('Reservation'),
+    );
   });
 
   it('should be defined', () => {
     expect(reservationService).toBeDefined();
+    expect(reservationModel).toBeDefined();
   });
 
   describe('findAll', () => {
@@ -63,13 +85,11 @@ describe('ReservationService', () => {
       const result = await reservationService.findAll();
 
       expect(result).toEqual(reservationSchemaList);
-      expect(reservationService.findAll).toHaveBeenCalledTimes(1);
+      expect(reservationModel.find).toHaveBeenCalledTimes(1);
     });
 
     it('should throw an exception', () => {
-      jest
-        .spyOn(reservationService, 'findAll')
-        .mockRejectedValueOnce(new Error());
+      jest.spyOn(reservationModel, 'find').mockRejectedValueOnce(new Error());
 
       expect(reservationService.findAll()).rejects.toThrowError();
     });
@@ -88,8 +108,8 @@ describe('ReservationService', () => {
     it('should create a new reservation successfully', async () => {
       const result = await reservationService.create(data);
 
-      expect(result).toEqual(reservationSchemaList[0]);
-      expect(reservationService.create).toHaveBeenCalledTimes(1);
+      expect(result).toEqual(newReservationSchema);
+      expect(reservationModel.create).toHaveBeenCalledTimes(1);
     });
 
     it('should throw an exception', () => {
@@ -121,7 +141,7 @@ describe('ReservationService', () => {
 
     it('should throw an exception', () => {
       jest
-        .spyOn(reservationService, 'update')
+        .spyOn(reservationModel, 'findByIdAndUpdate')
         .mockRejectedValueOnce(new Error());
 
       expect(reservationService.update(id, data)).rejects.toThrowError();
@@ -133,11 +153,12 @@ describe('ReservationService', () => {
       const result = await reservationService.remove('1');
 
       expect(result).toBeUndefined();
+      expect(reservationModel.deleteOne).toHaveBeenCalledTimes(1);
     });
 
     it('should throw an excpetion', () => {
       jest
-        .spyOn(reservationService, 'remove')
+        .spyOn(reservationModel, 'deleteOne')
         .mockRejectedValueOnce(new Error());
 
       expect(reservationService.remove('1')).rejects.toThrowError();
